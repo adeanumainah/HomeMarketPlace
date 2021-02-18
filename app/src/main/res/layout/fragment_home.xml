@@ -159,6 +159,29 @@
                 android:textStyle="bold" />
 
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/progressBarHolder"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha="0.4"
+                android:animateLayoutChanges="true"
+                android:background="#000000"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="gone">
+
+            <ProgressBar
+                android:id="@+id/loginPB"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_terkini"

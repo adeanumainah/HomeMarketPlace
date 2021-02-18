@@ -1,7 +1,10 @@
 package com.dean.homemarketplace.model
 
+import android.os.Parcel
 import android.os.Parcelable
+import kotlinx.android.parcel.Parceler
 import kotlinx.android.parcel.Parcelize
+import java.security.cert.Certificate
 
 @Parcelize
 data class Home (
