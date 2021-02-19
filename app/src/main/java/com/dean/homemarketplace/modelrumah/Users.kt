@@ -1,4 +1,4 @@
-package com.dean.homemarketplace.model
+package com.dean.homemarketplace.modelrumah
 
 class Users {
     var name: String? = null

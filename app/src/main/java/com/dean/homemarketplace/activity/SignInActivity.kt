@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import com.dean.homemarketplace.R
-import com.dean.homemarketplace.model.Users
+import com.dean.homemarketplace.modelrumah.Users
 import com.dean.homemarketplace.utils.Constan
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount

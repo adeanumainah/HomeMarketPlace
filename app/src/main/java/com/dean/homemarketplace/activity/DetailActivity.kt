@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.dean.homemarketplace.R
-import com.dean.homemarketplace.model.Home
+import com.dean.homemarketplace.modelrumah.RumahItem
 import kotlinx.android.synthetic.main.activity_detail.*
 
 class DetailActivity : AppCompatActivity() {
@@ -15,7 +15,7 @@ class DetailActivity : AppCompatActivity() {
         const val KEY_POPULAR_HOME = "key_popular_home"
     }
 
-    private var home: Home? = null
+    private var home: RumahItem? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,11 +28,11 @@ class DetailActivity : AppCompatActivity() {
         tv_lable_desc.text = home?.desc
         tv_lable_type.text = home?.type
         tv_lable_developer.text = home?.developer
-        tv_lable_fproperty.text = home?.property_facilities
+//        tv_lable_fproperty.text = home?.property_facilities
         tv_lable_sertifikat.text = home?.certificate
         tv_lable_furnished.text = home?.furnished
-        tv_lable_lantai.text = home?.number_of_floors
-        tv_lable_luas.text = home?.surface_area
+//        tv_lable_lantai.text = home?.number_of_floors
+//        tv_lable_luas.text = home?.surface_area
 //
 //        btn_call_us.setOnClickListener {
 //            val nomor = "09667347"

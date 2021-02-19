@@ -6,55 +6,49 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.os.bundleOf
-import androidx.navigation.findNavController
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.dean.homemarketplace.R
-import com.dean.homemarketplace.model.Home
-import com.dean.homemarketplace.model.ResponseItem
+import com.dean.homemarketplace.activity.DetailActivity
+import com.dean.homemarketplace.helper.BaseActivity.Companion.KEYRUMAH
+import com.dean.homemarketplace.modelrumah.RumahItem
 import com.dean.homemarketplace.ui.fragment.HomeFragment
 import kotlinx.android.synthetic.main.row_listh.view.*
 import java.lang.String
 
-class PropertyPopularAdapter(context: Context, resource: Int, objects: List<ResponseItem>) :
-    ArrayAdapter<ResponseItem?>(context!!, resource, objects) {
-    private val personItem: List<ResponseItem> = objects
-    override fun getView(
-        position: Int,
-        convertView: View?,
-        parent: ViewGroup
+class PropertyPopularAdapter(
+        var rumahActivity: FragmentActivity?,
+        var dataPerson: List<RumahItem?>?
+): RecyclerView.Adapter<PropertyPopularAdapter.MyViewHolder>() {
 
-    ): View {
-        val inflater =
-            context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val v: View = inflater.inflate(R.layout.row_listh, parent, false)
-        val txtIdRumah = v.findViewById<TextView>(R.id.tv_id_rumah)
-        val txtNameRumah = v.findViewById<TextView>(R.id.tv_name_rumah)
-        val txtAddressRumah = v.findViewById<TextView>(R.id.tv_address_rumah)
 
-        txtIdRumah.text = (String.valueOf(personItem[position].id))
-        txtNameRumah.text = (String.valueOf(personItem[position].name))
-        txtAddressRumah.text = String.valueOf(personItem[position].address)
+    //unutk mengatur layout yang akan ditampilkan
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PropertyPopularAdapter.MyViewHolder {
+        var view = LayoutInflater.from(rumahActivity).inflate(R.layout.row_listh, parent, false)
+        return MyViewHolder(view)
+    }
 
-        v.setOnClickListener {
-            val intent = Intent(context, HomeFragment::class.java)
-            intent.putExtra("id", String.valueOf(personItem[position].id))
-            intent.putExtra("name", personItem[position].name)
-            intent.putExtra("address", personItem[position].address)
-            context.startActivity(intent)
+    //deklarasi dan inisialisasi
+    class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+
+
+    //untuk memnghitung total data yang akan di load/tampil
+    override fun getItemCount(): Int = dataPerson?.size!!
+
+    //untuk mengeset data
+    override fun onBindViewHolder(holder: PropertyPopularAdapter.MyViewHolder, position: Int) {
+        holder.itemView.tv_name_rumah.text = dataPerson?.get(position)?.name
+        holder.itemView.tv_address_rumah.text = dataPerson?.get(position)?.address
+        //aksi klik
+        holder.itemView.setOnClickListener {
+            var intent = Intent(rumahActivity, DetailActivity::class.java)
+            intent.putExtra(KEYRUMAH,dataPerson?.get(position))
+
+            rumahActivity?.startActivity(intent)
         }
-        return v
     }
 }
-
-
-
-
-
-
-
 
 
 //    var dataItem: List<Home>? = data

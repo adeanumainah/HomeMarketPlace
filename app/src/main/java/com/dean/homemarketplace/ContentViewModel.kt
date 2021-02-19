@@ -1,16 +1,6 @@
 package com.dean.homemarketplace
 
-import android.os.Looper.loop
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.dean.homemarketplace.model.Home
-import com.loopj.android.http.AsyncHttpClient
-import com.loopj.android.http.AsyncHttpResponseHandler
-import org.json.JSONObject
-import retrofit2.http.Header
-import java.lang.Exception
 
 class ContentViewModel : ViewModel() {
 

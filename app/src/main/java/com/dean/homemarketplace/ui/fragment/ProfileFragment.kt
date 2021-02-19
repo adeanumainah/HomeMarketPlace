@@ -1,6 +1,5 @@
 package com.dean.homemarketplace.ui.fragment
 
-import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,10 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import com.dean.homemarketplace.R
 import com.dean.homemarketplace.activity.SignInActivity
-import com.dean.homemarketplace.model.Users
+import com.dean.homemarketplace.modelrumah.Users
 import com.dean.homemarketplace.utils.Constan
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.fragment_profile.*
 import org.jetbrains.anko.sdk27.coroutines.onClick

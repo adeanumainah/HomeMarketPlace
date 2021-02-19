@@ -1,5 +1,6 @@
 package com.dean.homemarketplace.ui.fragment
 
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,21 +9,21 @@ import android.view.ViewGroup
 import android.widget.ListView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.dean.homemarketplace.R
 import com.dean.homemarketplace.adapter.PropertyPopularAdapter
-import com.dean.homemarketplace.model.ResponseItem
+import com.dean.homemarketplace.modelrumah.ModelRumah
+import com.dean.homemarketplace.network.ApiConfig
 import com.dean.homemarketplace.network.ApiService
+import com.dean.homemarketplace.network.RetrofitClient
+import kotlinx.android.synthetic.main.fragment_home.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 
-@Suppress("UNREACHABLE_CODE")
 class HomeFragment : Fragment() {
-    var rv: ListView? = null
-    var apiService: ApiService? = null
-    var list: List<ResponseItem> = ArrayList<ResponseItem>()
-
+   
     companion object{
         fun defaultFragment(): HomeFragment{
             val home_fragment = HomeFragment()
@@ -34,46 +35,92 @@ class HomeFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return super.onCreateView(inflater, container, savedInstanceState)
+    override fun onCreateView(
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        var v = inflater.inflate(R.layout.fragment_home, container, false)
+        getDataRumah()
 
-        val title = requireActivity().findViewById<TextView>(R.id.tv_name_rumah)
-        val add = requireActivity().findViewById<TextView>(R.id.tv_address_rumah)
-
-
-        val name = requireActivity().intent.getStringExtra("name")
-        val address = requireActivity().intent.getStringExtra("address")
-
-        title.text = name
-        add.text = address
-        userList
-
+        return v
     }
 
-    private val userList: Unit
-        get() {
-            val call: Call<List<ResponseItem>>? = apiService?.product
-            call?.enqueue(object : Callback<List<ResponseItem>> {
-                override fun onResponse(call: Call<List<ResponseItem>>, response: Response<List<ResponseItem>>) {
-                    if (response.isSuccessful) {
-                        list = response.body()!!
-                        rv!!.adapter = context?.let {
-                            PropertyPopularAdapter(
-                                    it,
-                                    R.layout.row_listh, list
+    private fun getDataRumah() {
+        var loading = ProgressDialog.show(activity, "proses get data Rumah", "Loading...")
+        
+        var apikey = "index.php/person/get"
+        RetrofitClient.getInstance().getDataRumah(apikey).enqueue(
+                object : Callback<ModelRumah> {
+                    override fun onFailure(call: Call<ModelRumah>, t: Throwable) {
+                        Log.d("cekerror", "koneksi gagal \n error: ${t.localizedMessage}")
+                        //untuk menghilangkan progress dialog
+                        loading.dismiss()
+                    }
 
-                            )
+                    override fun onResponse(call: Call<ModelRumah>, response: Response<ModelRumah>) {
+                        //untuk menghilangkan progress dialog
+                        loading.dismiss()
+                        if (response.isSuccessful) {
+                            var status = response.body()?.status
+                            if (status.equals("ok")) {
+                                var dataRumah = response.body()?.person
+                                var adapter = PropertyPopularAdapter(activity, dataRumah)
+                                rv_terkini.adapter = adapter
+                                rv_terkini.layoutManager = LinearLayoutManager(activity)
+                            }
                         }
                     }
-                }
 
-                override fun onFailure(
-                        call: Call<List<ResponseItem>>, t: Throwable) {
-                    Log.e("ERROR: ", t.message!!)
                 }
-            })
-        }
+        )
+    }
 }
+
+private fun <T> Call<T>.enqueue(callback: Callback<ModelRumah>) {
+
+}
+
+
+//        apiService = ApiConfig.apiService
+//
+//        val title = requireActivity().findViewById<TextView>(R.id.tv_name_rumah)
+//        val add = requireActivity().findViewById<TextView>(R.id.tv_address_rumah)
+//
+//
+//        val name = requireActivity().intent.getStringExtra("name")
+//        val address = requireActivity().intent.getStringExtra("address")
+//
+//        title.text = name
+//        add.text = address
+//        userList
+
+    
+
+//    private val userList: Unit
+//        get() {
+//            val call: Call<List<ResponseItem>>? = apiService?.product
+//            call?.enqueue(object : Callback<List<ResponseItem>> {
+//                override fun onResponse(call: Call<List<ResponseItem>>, response: Response<List<ResponseItem>>) {
+//                    if (response.isSuccessful) {
+//                        list = response.body()!!
+//                        rv!!.adapter = context?.let {
+//                            PropertyPopularAdapter(
+//                                    it,
+//                                    R.layout.row_listh, list
+//
+//                            )
+//                        }
+//                    }
+//                }
+//
+//                override fun onFailure(
+//                        call: Call<List<ResponseItem>>, t: Throwable) {
+//                    Log.e("ERROR: ", t.message!!)
+//                }
+//            })
+//        }
+//}
 
 
 //    companion object{

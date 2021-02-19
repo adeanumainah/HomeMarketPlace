@@ -100,6 +100,8 @@ dependencies {
     implementation 'org.glassfish:javax.annotation:10.0-b28'
     implementation 'com.loopj.android:android-async-http:1.4.9'
     implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.2.1'
+
 
     //rest api
 

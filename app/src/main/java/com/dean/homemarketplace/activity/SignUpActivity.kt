@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.dean.homemarketplace.R
-import com.dean.homemarketplace.model.Users
+import com.dean.homemarketplace.modelrumah.Users
 import com.dean.homemarketplace.utils.Constan
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser

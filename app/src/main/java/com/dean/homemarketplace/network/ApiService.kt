@@ -1,11 +1,14 @@
 package com.dean.homemarketplace.network
 
-import com.dean.homemarketplace.model.Home
-import com.dean.homemarketplace.model.ResponseItem
+import com.dean.homemarketplace.modelrumah.RumahItem
 import retrofit2.Call
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 interface ApiService {
-    @get:GET("person/get/")
-    val product: Call<List<ResponseItem>>
+
+    @GET("person/get/")
+    fun getDataRumah(
+        @Query("api") apikey: String?
+    ): Call<RumahItem>
 }
