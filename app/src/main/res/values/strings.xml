@@ -57,5 +57,14 @@
     <string name="sign_out">Sign Out</string>
     <string name="title_profile">Profile</string>
     <string name="edit_profile">Edit Profile</string>
+    <string name="image_view">Image View</string>
+    <string name="lable_category_semarang">Semarang</string>
+    <string name="lable_category_Jkt">Jakarta</string>
+    <string name="lable_category_Jogja">Jogja</string>
+    <string name="lable_category_Tgr">Tangerang</string>
+    <string name="lable_category_Bogor">Bogor</string>
+    <string name="lable_category_Bdg">Bandung</string>
+    <string name="lable_category_sby">Surabaya</string>
+    <string name="lable_category_Pekanbaru">Pekanbaru</string>
 
 </resources>

@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.widget.Toast
 import com.dean.homemarketplace.R
 import com.dean.homemarketplace.modelrumah.Users
-import com.dean.homemarketplace.utils.Constan
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.FirebaseDatabase
@@ -82,10 +81,10 @@ class SignUpActivity : AppCompatActivity() {
         var key = database.reference.push().key
 
         //nama table
-        val myRef = database.getReference(Constan.tb_user)
+//        val myRef = database.getReference(Constan.tb_user)
 
         //menyimpan ke database
-        myRef.child(key!!).setValue(user)
+//        myRef.child(key!!).setValue(user)
 
         return true
     }

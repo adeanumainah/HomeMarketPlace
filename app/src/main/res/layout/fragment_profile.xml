@@ -139,18 +139,18 @@
                         android:layout_marginEnd="@dimen/_5dp"
                         android:background="@android:color/black" />
 
-                    <Button
-                        android:id="@+id/btn_signout"
-                        android:layout_width="@dimen/_270dp"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/white"
-                        android:background="@drawable/btn_gradiasi"
-                        android:layout_below="@id/tv_email_profile"
-                        android:text="@string/sign_out"
-                        android:gravity="center"
-                        android:layout_marginStart="@dimen/_30dp"
-                        android:layout_marginBottom="@dimen/_15dp"
-                        android:layout_marginTop="@dimen/_50dp"/>
+                    <ImageButton
+                        android:id="@+id/ib_logout"
+                        android:layout_width="@dimen/_60dp"
+                        android:layout_height="@dimen/_50dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="40dp"
+                        android:background="@color/white"
+                        android:layout_centerHorizontal="true"
+                        android:layout_below="@id/view2"
+                        app:srcCompat="@drawable/ic_baseline_power_settings_new_24"
+                        android:contentDescription="@string/image_view" />
+
 
 
                 </RelativeLayout>

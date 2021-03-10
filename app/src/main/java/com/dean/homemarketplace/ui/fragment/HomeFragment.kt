@@ -1,21 +1,25 @@
 package com.dean.homemarketplace.ui.fragment
 
 import android.app.ProgressDialog
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ListView
-import android.widget.TextView
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.dean.homemarketplace.R
-import com.dean.homemarketplace.adapter.PropertyPopularAdapter
-import com.dean.homemarketplace.modelrumah.ModelRumah
-import com.dean.homemarketplace.network.ApiConfig
-import com.dean.homemarketplace.network.ApiService
-import com.dean.homemarketplace.network.RetrofitClient
+import com.dean.homemarketplace.activity.DetailActivity
+import com.dean.homemarketplace.activity.SeeAllTerkiniActivity
+import com.dean.homemarketplace.adapter.ProyekTerkiniAdapter
+import com.dean.homemarketplace.model.ResponseModel
+import com.dean.homemarketplace.network.AppiService
+import com.google.gson.Gson
+import com.synnapps.carouselview.CarouselView
+import com.synnapps.carouselview.ImageListener
 import kotlinx.android.synthetic.main.fragment_home.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -23,9 +27,12 @@ import retrofit2.Response
 
 
 class HomeFragment : Fragment() {
-   
-    companion object{
-        fun defaultFragment(): HomeFragment{
+    private lateinit var terkiniAdapter: ProyekTerkiniAdapter
+    private lateinit var rv_terkini: RecyclerView
+
+
+    companion object {
+        fun defaultFragment(): HomeFragment {
             val home_fragment = HomeFragment()
             //ngirim ke oncreate
             val bundle = Bundle()
@@ -39,46 +46,88 @@ class HomeFragment : Fragment() {
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        var v = inflater.inflate(R.layout.fragment_home, container, false)
-        getDataRumah()
+        var v : View = inflater.inflate(R.layout.fragment_home, container, false)
 
+        rv_terkini = v.findViewById(R.id.rv_terkini)
+                // Inflate the layout for this fragment
         return v
     }
 
-    private fun getDataRumah() {
-        var loading = ProgressDialog.show(activity, "proses get data Rumah", "Loading...")
-        
-        var apikey = "index.php/person/get"
-        RetrofitClient.getInstance().getDataRumah(apikey).enqueue(
-                object : Callback<ModelRumah> {
-                    override fun onFailure(call: Call<ModelRumah>, t: Throwable) {
-                        Log.d("cekerror", "koneksi gagal \n error: ${t.localizedMessage}")
-                        //untuk menghilangkan progress dialog
-                        loading.dismiss()
-                    }
+    val imageContentSlider = intArrayOf(
+            R.drawable.rumah1,
+            R.drawable.rumah2,
+            R.drawable.rumah3,
+            R.drawable.rumah4
 
-                    override fun onResponse(call: Call<ModelRumah>, response: Response<ModelRumah>) {
-                        //untuk menghilangkan progress dialog
+    )
+
+    val imageContentListener: ImageListener = object : ImageListener {
+        override fun setImageForPosition(position: Int, imageView: ImageView?) {
+            imageView?.setImageResource(imageContentSlider[position])
+        }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val carouselView = is_main as CarouselView
+        carouselView.setImageListener(imageContentListener)
+        carouselView.pageCount = imageContentSlider.count()
+
+
+        GetDatas()
+
+
+        tv_see_all_terkini.setOnClickListener {
+            val intent = Intent(context, SeeAllTerkiniActivity::class.java)
+            startActivity(intent)
+        }
+
+        terkiniAdapter = context?.let { ProyekTerkiniAdapter(it) }!!
+        rv_terkini.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = terkiniAdapter
+        }
+    }
+
+    private fun GetDatas() {
+        var loading = ProgressDialog.show(context, "Request Data", "Loading..")
+        AppiService.endpoint.getData().enqueue(
+                object : Callback<ResponseModel> {
+                    override fun onResponse(call: Call<ResponseModel>, response: Response<ResponseModel>) {
+//                        Log.d("Response", "Success" + response.body()?.data)
+
                         loading.dismiss()
+                        Log.d("DATA", "hide loading")
                         if (response.isSuccessful) {
-                            var status = response.body()?.status
-                            if (status.equals("ok")) {
-                                var dataRumah = response.body()?.person
-                                var adapter = PropertyPopularAdapter(activity, dataRumah)
-                                rv_terkini.adapter = adapter
-                                rv_terkini.layoutManager = LinearLayoutManager(activity)
+                            val data = response.body()
+                            Log.d("DATA", "success")
+                            if(data?.status == 200) {
+                                Log.d("DATA", "200")
+                                if(!data.data.isNullOrEmpty()){
+                                    Log.d("DATA", "ADA")
+                                    Log.d("DATA", Gson().toJson(data.data))
+                                    terkiniAdapter.setData(data.data!!)
+                                }
+
                             }
                         }
                     }
 
+                    override fun onFailure(call: Call<ResponseModel>, t: Throwable) {
+                        Log.d("Response", "Failed : " + t.localizedMessage)
+                        loading.dismiss()
+                    }
                 }
+
+
         )
+
     }
-}
-
-private fun <T> Call<T>.enqueue(callback: Callback<ModelRumah>) {
-
+    private fun Intent.putExtra(keyPopularHome: String) {
+        val page = Intent(context, DetailActivity::class.java)
+        page.putExtra(DetailActivity.KEY_POPULAR_HOME)
+        startActivity(page)
+    }
 }
 
 

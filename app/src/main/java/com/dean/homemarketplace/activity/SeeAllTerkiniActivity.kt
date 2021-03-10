@@ -1,92 +1,90 @@
 package com.dean.homemarketplace.activity
 
-import androidx.appcompat.app.AppCompatActivity
+import android.app.ProgressDialog
+import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
+import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.androidnetworking.AndroidNetworking
-import com.androidnetworking.common.Priority
-import com.androidnetworking.error.ANError
-import com.androidnetworking.interfaces.JSONArrayRequestListener
 import com.dean.homemarketplace.R
 import com.dean.homemarketplace.adapter.ProyekTerkiniAdapter
-import com.dean.homemarketplace.modelrumah.ModelRumah
-import com.dean.homemarketplace.modelrumah.RumahItem
+import com.dean.homemarketplace.model.Home
+import com.dean.homemarketplace.model.ResponseModel
+import com.dean.homemarketplace.network.AppiService
+import com.dean.homemarketplace.ui.fragment.HomeFragment
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_see_all_terkini.*
-import org.json.JSONArray
-import org.json.JSONException
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+
 
 class SeeAllTerkiniActivity : AppCompatActivity() {
+    private lateinit var terkiniAdapter: ProyekTerkiniAdapter
 
-//    private val listHome = ArrayList<ModelRumah>()
-//    var responseItem: MutableList<RumahItem> = ArrayList()
-//    var proyekTerkiniAdapter: ProyekTerkiniAdapter? = null
-//
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        setContentView(R.layout.activity_see_all_terkini)
-//        supportActionBar?.hide()
-//
-//        rv_see_all_terkini.setHasFixedSize(true)
-//        rv_see_all_terkini.layoutManager = LinearLayoutManager(this)
-//        getListHome()
-//    }
-//
-//    private fun getListHome() {
-//        AndroidNetworking.get(com.dean.homemarketplace.utils.APIUtils.API_URL)
-//            .setPriority(Priority.MEDIUM).build().getAsJSONArray(object : JSONArrayRequestListener{
-//                override fun onResponse(response: JSONArray) {
-//                    for (i in 0 until response.length()){
-//                        try {
-//                            val dataApi = RumahItem()
-//                            val jsonObject = response.getJSONObject(i)
-//                            dataApi.name = jsonObject.getString("name")
-//                            dataApi.address = jsonObject.getString("address")
-//                            dataApi.price = jsonObject.getString("price")
-//                            dataApi.type = jsonObject.getString("type")
-//                            dataApi.propertyFacilities = jsonObject.getString("property_facilities")
-//                            dataApi.certificate = jsonObject.getString("certificate")
-//                            dataApi.furnished = jsonObject.getString("furnished")
-//                            dataApi.numberOfFloors = jsonObject.getString("number_of_floors")
-//                            dataApi.surfaceArea = jsonObject.getString("surface_area")
-//
-//                            responseItem.add(dataApi)
-//                            showRecyclerList()
-//                            showRecyclerGrid()
-//                        } catch (e : JSONException){
-//                            e.printStackTrace()
-//                            Toast.makeText(
-//                                this@SeeAllTerkiniActivity,
-//                                "Gagal menampilkan data",
-//                                Toast.LENGTH_SHORT
-//                            ).show()
-//                        }
-//                    }
-//                }
-//
-//                override fun onError(anError: ANError?) {
-//                    Toast.makeText(
-//                        this@SeeAllTerkiniActivity,
-//                        "Hayolohh gabisa tampil kann wkwk EROR berarti, benerin dulu sana!!",
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-//                }
-//
-//            })
-//
-//    }
-//
-//    private fun showRecyclerList() {
-////        proyekTerkiniAdapter = ProyekTerkiniAdapter(this@SeeAllTerkiniActivity, responseItem, this)
-//        rv_see_all_terkini!!.adapter = proyekTerkiniAdapter
-//    }
-//
-//    private fun showRecyclerGrid() {
-//        val layoutManagerStaggered = StaggeredGridLayoutManager(2, GridLayoutManager.VERTICAL)
-//        rv_see_all_terkini.layoutManager = layoutManagerStaggered
-//        rv_see_all_terkini.adapter = ProyekTerkiniAdapter(listHome)
-//    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_see_all_terkini)
+        supportActionBar?.hide()
+        showRecyclerGrid()
+        getHome()
+        getRecyclerList()
 
+    }
+
+    private fun getRecyclerList() {
+        //mengikat si recyclernya ke dalam list
+        val layoutManagerStaggered = StaggeredGridLayoutManager(2, GridLayoutManager.VERTICAL)
+        rv_all_terkini.layoutManager = layoutManagerStaggered
+
+        //ngeset data diadapter dan diset adapternya disini
+        terkiniAdapter = ProyekTerkiniAdapter(this)
+
+        rv_all_terkini.adapter = terkiniAdapter
+
+    }
+
+    private fun getHome() {
+        imgHome.setOnClickListener {
+            val intent = Intent (this, HomeFragment::class.java)
+            startActivity(intent)
+        }
+    }
+
+
+    private fun showRecyclerGrid() {
+        var loading = ProgressDialog.show(this, "Request Data", "Loading..")
+        AppiService.endpoint.getData().enqueue(
+                object : Callback<ResponseModel> {
+                    override fun onResponse(call: Call<ResponseModel>, response: Response<ResponseModel>) {
+//                        Log.d("Response", "Success" + response.body()?.data)
+
+                        loading.dismiss()
+                        Log.d("DATA", "hide loading")
+                        if (response.isSuccessful) {
+                            val data = response.body()
+                            Log.d("DATA", "success")
+                            if(data?.status == 200) {
+                                Log.d("DATA", "200")
+                                if(!data.data.isNullOrEmpty()){
+                                    Log.d("DATA", "ADA")
+                                    Log.d("DATA", Gson().toJson(data.data))
+                                    terkiniAdapter.setData(data.data!!)
+                                }
+
+                            }
+                        }
+                    }
+
+                    override fun onFailure(call: Call<ResponseModel>, t: Throwable) {
+                        Log.d("Response", "Failed : " + t.localizedMessage)
+                        loading.dismiss()
+                    }
+                }
+
+
+        )
+    }
 }
+

@@ -5,6 +5,7 @@ import android.os.Bundle
 import com.dean.homemarketplace.R
 
 class SeeAllPopularActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_see_all_popular)
